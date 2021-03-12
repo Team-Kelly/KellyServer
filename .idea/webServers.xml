@@ -10,7 +10,7 @@
         </fileTransfer>
       </webServer>
       <webServer id="7c10b719-dcff-4814-9f01-69fa249e7b94" name="campustaxiMacServer" url="http://210.102.225.68">
-        <fileTransfer rootFolder="/Users/mina/Develop" accessType="SFTP" host="210.102.225.68" port="22" sshConfigId="bb4ad2f8-0d1a-441b-a1f9-1bdc157ae531" sshConfig="mina@210.102.225.68:22 password">
+        <fileTransfer rootFolder="/Users/minsekim/mina_github/campustaxi" accessType="SFTP" host="210.102.225.68" port="22" sshConfigId="bb4ad2f8-0d1a-441b-a1f9-1bdc157ae531" sshConfig="minsekim@210.102.225.68:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

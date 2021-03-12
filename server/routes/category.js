@@ -3,9 +3,19 @@ var router = express.Router();
 const { PythonShell } = require("python-shell");
 
 /* GET weather */
-router.get('/weather', function(req, res, next) {
+router.get('/weather/:location', function(req, res, next) {
+
+    const location = req.params.location;
+
+    let options = {
+        scriptPath: "./pyfile/",
+        args: [location]
+    };
+
+    console.log(options);
 
     PythonShell.run("naverWeather.py", options, function(err, results) {
+
         if (err) throw err;
 
         let text = ""
@@ -17,11 +27,6 @@ router.get('/weather', function(req, res, next) {
 
     });
 });
-
-let options = {
-    scriptPath: "./pyfile/",
-    args: ["노원구"]
-};
 
 
 module.exports = router;
