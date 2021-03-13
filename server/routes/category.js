@@ -54,4 +54,11 @@ router.get('/stock/:tickernumber', function(req, res, next) {
 });
 
 
+
+// /* GET bus */
+// router.get('/bus/:buscode', function(req, res, next) {
+//
+// });
+
+
 module.exports = router;
