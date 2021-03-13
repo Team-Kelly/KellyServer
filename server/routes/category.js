@@ -29,4 +29,29 @@ router.get('/weather/:location', function(req, res, next) {
 });
 
 
+/* GET stock */
+router.get('/stock/:tickernumber', function(req, res, next) {
+
+    const tickernumber = req.params.tickernumber;
+
+    let options = {
+        scriptPath: "./pyfile/",
+        args: [tickernumber]
+    };
+    console.log(tickernumber);
+
+    PythonShell.run("naverStock.py", options, function(err, results) {
+
+        if (err) throw err;
+
+        let text = ""
+        let data = results[0].replace(`b\'`, '').replace(`\'`, '');
+        let buff = Buffer.from(data, 'base64');
+        text = buff.toString('utf-8');
+
+        return res.json(JSON.parse(text));
+    });
+});
+
+
 module.exports = router;
