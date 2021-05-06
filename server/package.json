@@ -7,11 +7,16 @@
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
+    "date-utils": "^1.2.21",
     "debug": "~2.6.9",
+    "dotenv": "^8.6.0",
     "ejs": "~2.6.1",
     "express": "^4.16.4",
+    "firebase-admin": "^9.7.0",
+    "googleapis": "^73.0.0",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "node-cron": "^3.0.0",
     "python-shell": "^2.0.3"
   }
 }
