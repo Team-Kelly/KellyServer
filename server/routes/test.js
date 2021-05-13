@@ -51,35 +51,42 @@ cron.schedule('* * * * *', function(){
 
   console.log("currentTime", curTime);
 
-  for (let item of simpleDB){
-    if (item.timer === curTime){
-      console.log("alarmTargetToken", item);
+  for (var idx = 0; idx < simpleDB.length; idx++){
+    if (simpleDB[idx].timer === curTime){
+      console.log("alarmTargetToken", simpleDB[idx]);
 
-      getAccessToken().then(function(resolvedData) {
-        var registrationToken = item.appToken;
-        console.log("registeration", registrationToken);
 
-// This registration token comes from the client FCM SDKs.
+      simpleDB.splice(idx, 1);
+      console.log(simpleDB);
 
-        var message = {
-          notification: {
-            "title": "kelly notification",
-            "body": "캘리 알람 테스트중입니다"
-          },
-          token: registrationToken
-        };
-
-// Send a message to the device corresponding to the provided
-// registration token.
-        admin.messaging().send(message)
-            .then((response) => {
-              // Response is a message ID string.
-              console.log('Successfully sent message:', response);
-            })
-            .catch((error) => {
-              console.log('Error sending message:', error);
-            });
-        })
+//       getAccessToken().then(function(resolvedData) {
+//         var registrationToken = simpleDB[idx].appToken;
+//         console.log("registeration", registrationToken);
+//
+// // This registration token comes from the client FCM SDKs.
+//
+//         simpleDB.splice(idx, 1);
+//         console.log(simpleDB);
+//
+//         var message = {
+//           notification: {
+//             "title": "kelly notification",
+//             "body": "캘리 알람 테스트중입니다"
+//           },
+//           token: registrationToken
+//         };
+//
+// // Send a message to the device corresponding to the provided
+// // registration token.
+//         admin.messaging().send(message)
+//             .then((response) => {
+//               // Response is a message ID string.
+//               console.log('Successfully sent message:', response);
+//             })
+//             .catch((error) => {
+//               console.log('Error sending message:', error);
+//             });
+//         })
     }
   }
 });
