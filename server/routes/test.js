@@ -3,14 +3,14 @@ var router = express.Router();
 var {google} = require('googleapis');
 var cron = require('node-cron');
 var admin = require("firebase-admin");
-require('dotenv').config({ path: "../.env" });
+require('dotenv').config({ path: "./.env" });
 
 const scopes = [
   'https://www.googleapis.com/auth/gmail.readonly',
   'https://www.googleapis.com/auth/admin.directory.user.readonly',
   'https://www.googleapis.com/auth/admin.directory.group'
 ]
-var serviceAccount = require(process.env.serviceAccount_PATH);
+var serviceAccount = require(process.env.jwtAuth_PATH);
 
 let simpleDB = [];
 
