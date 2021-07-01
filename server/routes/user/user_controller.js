@@ -1,6 +1,7 @@
 const { create, getUserByUserID, getUsers, updateUser, getUserByID } = require("./user_service");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
     createUser: (req, res) => {
@@ -94,13 +95,17 @@ module.exports = {
             console.log("result", result)
             if (result) {
                 results.userpwd = undefined;
-                const jsontoken = sign({ result: results }, ""+process.env.JWT_Secret_Key, {
-                    expiresIn: "1h"
+                const accesstoken = sign({ result: results }, ""+process.env.JWT_Secret_Key, {
+                    expiresIn: "1m"
+                });
+                const refreshtoken = sign({ result: results }, ""+process.env.JWT_Refresh_Key, {
+                    expiresIn: "10m"
                 });
                 return res.json({
                     success: 1,
                     message: "login successfully",
-                    token: jsontoken
+                    accesstoken: accesstoken,
+                    refreshtoken: refreshtoken
                 });
             } else {
                 return res.json({
@@ -109,5 +114,30 @@ module.exports = {
                 });
             }
         });
+    },
+    refresh: (req, res) => { //access token 만료시 refresh api 호출하여 access token 재생성
+        const body = req.body;
+        let refreshtoken = body.refreshtoken;
+
+        jwt.verify(refreshtoken, process.env.JWT_Refresh_Key,
+            (err, decode)=>{
+                if (err) return res.sendStatus(403); // invalid token
+
+                getUserByID(decode.userid, (err, results) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    //db로부터 얻은 결과로 accesstoken 발급
+                    const accesstoken = sign({ result: results }, ""+process.env.JWT_Secret_Key, {
+                        expiresIn: "1m"
+                    });
+
+                    return res.json({
+                        success: 1,
+                        message: "recreate accesstoken",
+                        accesstoken: accesstoken,
+                    });
+                })
+            });
     },
 }
