@@ -78,6 +78,34 @@ router.get('/coin/:symbol', function(req, res, next) {
 
 });
 
+//버스 도착 정보 얻어옴
+router.get('/bus/:arsid/:busid', function(req, res, next) {
+
+    const arsid = req.params.arsid; //버스 정류장 번호
+    const busid = req.params.busid; //타겟 버스 번호
+
+    let options = {
+        scriptPath: "./pyfile/",
+        args: [arsid, busid]
+    };
+    console.log(arsid, busid);
+
+    PythonShell.run("busArrive.py", options, function(err, results) {
+
+        if (err) throw err;
+
+        let text = ""
+        let data = results[0].replace(`b\'`, '').replace(`\'`, '');
+        let buff = Buffer.from(data, 'base64');
+        text = buff.toString('utf-8');
+
+        console.log("return" + text)
+        return res.json(JSON.parse(text));
+    });
+
+
+
+});
 
 // 도착 정보 얻어옴
 // function getArriveData(routeId, arsId, direction) {
