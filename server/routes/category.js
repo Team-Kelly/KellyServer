@@ -8,6 +8,23 @@ require('dotenv').config({ path: "../.env" });
 
 const { PythonShell } = require("python-shell");
 
+async function getPythonResult(pyname, options){
+    return new Promise(resolve =>{
+        PythonShell.run(pyname, options, function(err, results) {
+
+            if (err) throw err;
+
+            let text = ""
+            let data = results[0].replace(`b\'`, '').replace(`\'`, '');
+            let buff = Buffer.from(data, 'base64');
+            text = buff.toString('utf-8');
+
+            console.log(text)
+            resolve(text);
+
+        });
+    })
+}
 
 /* GET weather */
 router.get('/weather/:location', function(req, res, next) {
@@ -19,20 +36,10 @@ router.get('/weather/:location', function(req, res, next) {
         args: [location]
     };
 
-    console.log(options);
-
-    PythonShell.run("naverWeather.py", options, function(err, results) {
-
-        if (err) throw err;
-
-        let text = ""
-        let data = results[0].replace(`b\'`, '').replace(`\'`, '');
-        let buff = Buffer.from(data, 'base64');
-        text = buff.toString('utf-8');
-
-        return res.json(JSON.parse(text));
-
-    });
+    getPythonResult("naverWeather.py", options)
+        .then(function(result){
+            return res.json(result)
+        });
 });
 
 
@@ -45,19 +52,12 @@ router.get('/stock/:tickernumber', function(req, res, next) {
         scriptPath: "./pyfile/",
         args: [tickernumber]
     };
-    console.log(tickernumber);
 
-    PythonShell.run("naverStock.py", options, function(err, results) {
+    getPythonResult("naverStock.py", options)
+        .then(function(result){
+            return res.json(result)
+        });
 
-        if (err) throw err;
-
-        let text = ""
-        let data = results[0].replace(`b\'`, '').replace(`\'`, '');
-        let buff = Buffer.from(data, 'base64');
-        text = buff.toString('utf-8');
-
-        return res.json(JSON.parse(text));
-    });
 });
 
 
@@ -88,22 +88,11 @@ router.get('/bus/:arsid/:busid', function(req, res, next) {
         scriptPath: "./pyfile/",
         args: [arsid, busid]
     };
-    console.log(arsid, busid);
 
-    PythonShell.run("busArrive.py", options, function(err, results) {
-
-        if (err) throw err;
-
-        let text = ""
-        let data = results[0].replace(`b\'`, '').replace(`\'`, '');
-        let buff = Buffer.from(data, 'base64');
-        text = buff.toString('utf-8');
-
-        console.log("return" + text)
-        return res.json(JSON.parse(text));
-    });
-
-
+    getPythonResult("busArrive.py", options)
+        .then(function(result){
+            return res.json(result)
+        });
 
 });
 
